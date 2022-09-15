@@ -49,7 +49,9 @@ func (s *Student) encryptPhone() (err error) {
 
 func (s *Student) BeforeSave(tx *gorm.DB) (err error) {
 	s.KeyVersion = ""
-	s.getAndSetID()
+	if s.ID == uuid.Nil {
+		s.getAndSetID()
+	}
 	if err = s.encryptNIK(); err != nil {
 		return err
 	}
