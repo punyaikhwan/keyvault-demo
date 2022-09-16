@@ -52,7 +52,7 @@ func (az *azureKeyVault) Encrypt(ctx context.Context, plaintext string, keyName 
 		return result, err
 	}
 
-	result.Result = base64.StdEncoding.EncodeToString([]byte(encryptRes.Result))
+	result.Result = base64.StdEncoding.EncodeToString(encryptRes.Result)
 	result.KeyVersion = keyVersion
 	return result, nil
 }

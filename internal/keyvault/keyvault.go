@@ -3,7 +3,7 @@ package keyvault
 import (
 	"keyvault-demo/config"
 	"keyvault-demo/internal/pkg/keyvault"
-	"keyvault-demo/internal/pkg/keyvault/azurekeyvault"
+	"keyvault-demo/internal/pkg/keyvault/hashicorptransit"
 )
 
 type keyVault struct {
@@ -14,7 +14,7 @@ var instance *keyVault
 
 func KeyVault() keyvault.KeyVault {
 	if instance == nil {
-		kv := azurekeyvault.NewAzureKeyVault(config.Configuration().VaultURL)
+		kv := hashicorptransit.NewHashicorpTransitEngine(config.Configuration().VaultURL, config.Configuration().VaultUsername, config.Configuration().VaultPassword)
 		instance = &keyVault{kv}
 	}
 

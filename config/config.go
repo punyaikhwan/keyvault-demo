@@ -16,9 +16,11 @@ var (
 )
 
 type _Configuration struct {
-	VaultURL string `env:"VAULT_URL" env-required`
-	DBURI    string `env:"DB_URI" env-required`
-	Port     int    `env:"FP_PORT" env-default:"7003"`
+	VaultURL      string `env:"VAULT_URL" env-required`
+	VaultUsername string `env:"VAULT_USERNAME"`
+	VaultPassword string `env:"VAULT_PASSWORD"`
+	DBURI         string `env:"DB_URI" env-required`
+	Port          int    `env:"FP_PORT" env-default:"7003"`
 }
 
 // ReadConfig reads the configuration file and sets the envFile variable
