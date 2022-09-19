@@ -16,9 +16,10 @@ var (
 )
 
 type _Configuration struct {
+	VaultProvider string `env:"VAULT_PROVIDER" env-default:"hashicorp"` // azure/hashicorp
 	VaultURL      string `env:"VAULT_URL" env-required`
-	VaultUsername string `env:"VAULT_USERNAME"`
-	VaultPassword string `env:"VAULT_PASSWORD"`
+	VaultUsername string `env:"VAULT_USERNAME"` // only for hashicorp provider
+	VaultPassword string `env:"VAULT_PASSWORD"` // only for hashicorp provider
 	DBURI         string `env:"DB_URI" env-required`
 	Port          int    `env:"FP_PORT" env-default:"7003"`
 }
