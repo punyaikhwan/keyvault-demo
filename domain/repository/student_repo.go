@@ -45,13 +45,8 @@ func (r *StudentRepo) Create(ctx context.Context, student entity.Student) (id uu
 	return student.ID, err
 }
 
-func (r *StudentRepo) Rotate(ctx context.Context) error {
-	students, err := r.FindAll(ctx)
-	if err != nil {
-		return err
-	}
-
-	err = r.db.Transaction(func(tx *gorm.DB) error {
+func (r *StudentRepo) BulkUpdate(ctx context.Context, students []entity.Student) error {
+	err := r.db.Transaction(func(tx *gorm.DB) error {
 		for _, student := range students {
 			tx1 := tx.Model(&student).
 				Session(&gorm.Session{FullSaveAssociations: true}).

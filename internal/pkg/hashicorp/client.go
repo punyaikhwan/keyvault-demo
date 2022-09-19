@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -167,6 +168,12 @@ func (c *Client) Encrypt(ctx context.Context, name string, version string, param
 
 	body, _ := ioutil.ReadAll(resp.Body)
 
+	if resp.StatusCode != http.StatusOK {
+		var errorBody map[string][]string
+		json.Unmarshal(body, &errorBody)
+		return EncryptResponse{}, errors.New(errorBody["errors"][0])
+	}
+
 	var encRes encryptResult
 	err = json.Unmarshal(body, &encRes)
 
@@ -205,6 +212,12 @@ func (c *Client) Decrypt(ctx context.Context, name string, params KeyOperationsP
 	defer resp.Body.Close()
 
 	body, _ := ioutil.ReadAll(resp.Body)
+
+	if resp.StatusCode != http.StatusOK {
+		var errorBody map[string][]string
+		json.Unmarshal(body, &errorBody)
+		return DecryptResponse{}, errors.New(errorBody["errors"][0])
+	}
 
 	var decRes decryptResult
 

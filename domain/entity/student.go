@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 type Student struct {
@@ -22,12 +21,12 @@ type Student struct {
 
 var keyName = "demo"
 
-func (s *Student) getAndSetID() *Student {
+func (s *Student) GetAndSetID() *Student {
 	s.ID = uuid.New()
 	return s
 }
 
-func (s *Student) encryptNIK() (err error) {
+func (s *Student) EncryptNIK() (err error) {
 	encrypted, err := keyvault.KeyVault().Encrypt(context.TODO(), s.NIK, keyName, s.KeyVersion)
 	if err != nil {
 		return err
@@ -37,7 +36,7 @@ func (s *Student) encryptNIK() (err error) {
 	return nil
 }
 
-func (s *Student) encryptPhone() (err error) {
+func (s *Student) EncryptPhone() (err error) {
 	encrypted, err := keyvault.KeyVault().Encrypt(context.TODO(), s.Phone, keyName, s.KeyVersion)
 	if err != nil {
 		return err
@@ -47,21 +46,7 @@ func (s *Student) encryptPhone() (err error) {
 	return nil
 }
 
-func (s *Student) BeforeSave(tx *gorm.DB) (err error) {
-	s.KeyVersion = ""
-	if s.ID == uuid.Nil {
-		s.getAndSetID()
-	}
-	if err = s.encryptNIK(); err != nil {
-		return err
-	}
-	if err = s.encryptPhone(); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (s *Student) decryptNIK() (err error) {
+func (s *Student) DecryptNIK() (err error) {
 	decrypted, err := keyvault.KeyVault().Decrypt(context.TODO(), s.NIK, keyName, s.KeyVersion)
 	if err != nil {
 		return err
@@ -70,22 +55,11 @@ func (s *Student) decryptNIK() (err error) {
 	return nil
 }
 
-func (s *Student) decryptPhone() (err error) {
+func (s *Student) DecryptPhone() (err error) {
 	decrypted, err := keyvault.KeyVault().Decrypt(context.TODO(), s.Phone, keyName, s.KeyVersion)
 	if err != nil {
 		return err
 	}
 	s.Phone = decrypted
-	return nil
-}
-
-func (s *Student) AfterFind(tx *gorm.DB) (err error) {
-	// decrypt NIK and phone
-	if err = s.decryptNIK(); err != nil {
-		return err
-	}
-	if err = s.decryptPhone(); err != nil {
-		return err
-	}
 	return nil
 }

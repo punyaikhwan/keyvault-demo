@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"keyvault-demo/config"
 	"keyvault-demo/domain/entity"
-	"keyvault-demo/domain/repository"
+	"keyvault-demo/service"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -12,14 +12,14 @@ import (
 )
 
 type controller struct {
-	echo        *echo.Echo
-	studentRepo repository.StudentRepo
+	echo       *echo.Echo
+	studentSrv service.StudentService
 }
 
 func NewController(e *echo.Echo) controller {
 	return controller{
-		echo:        e,
-		studentRepo: repository.NewStudentRepo(),
+		echo:       e,
+		studentSrv: service.NewStudentService(),
 	}
 }
 
@@ -29,12 +29,12 @@ func (ctr *controller) createStudent(c echo.Context) (err error) {
 
 	c.Bind(student)
 
-	id, err := ctr.studentRepo.Create(ctx, *student)
+	id, err := ctr.studentSrv.Create(ctx, *student)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "error creating student", err)
 	}
 
-	stdResult, err := ctr.studentRepo.FindByID(ctx, id)
+	stdResult, err := ctr.studentSrv.FindByID(ctx, id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "error get student", err)
 	}
@@ -45,7 +45,7 @@ func (ctr *controller) createStudent(c echo.Context) (err error) {
 func (ctr *controller) findAll(c echo.Context) (err error) {
 	ctx := c.Request().Context()
 
-	students, err := ctr.studentRepo.FindAll(ctx)
+	students, err := ctr.studentSrv.FindAll(ctx)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
@@ -56,12 +56,15 @@ func (ctr *controller) findAll(c echo.Context) (err error) {
 func (ctr *controller) rotate(c echo.Context) (err error) {
 	ctx := c.Request().Context()
 
-	err = ctr.studentRepo.Rotate(ctx)
+	success, fails, err := ctr.studentSrv.Rotate(ctx)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
-	return c.JSON(http.StatusOK, "rotation success")
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"succcess": success,
+		"fails":    fails,
+	})
 }
 
 func (ctr *controller) Start() {
