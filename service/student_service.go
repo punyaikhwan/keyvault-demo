@@ -83,16 +83,20 @@ func (s *StudentService) Rotate(ctx context.Context) (numSuccess int, numFails i
 	for _, std := range stdTemps {
 		if err = std.DecryptNIK(); err != nil {
 			numFails++
+			continue
 		}
 		if err = std.DecryptPhone(); err != nil {
 			numFails++
+			continue
 		}
 
 		if err = std.EncryptNIK(); err != nil {
 			numFails++
+			continue
 		}
 		if err = std.EncryptPhone(); err != nil {
 			numFails++
+			continue
 		}
 		students = append(students, std)
 	}
