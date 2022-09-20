@@ -19,7 +19,7 @@ type Student struct {
 	UpdatedAt  time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }
 
-var keyName = "demo"
+var keyName = "student"
 
 func (s *Student) GetAndSetID() *Student {
 	s.ID = uuid.New()
@@ -27,7 +27,7 @@ func (s *Student) GetAndSetID() *Student {
 }
 
 func (s *Student) EncryptNIK() (err error) {
-	encrypted, err := keyvault.KeyVault().Encrypt(context.TODO(), s.NIK, keyName, s.KeyVersion)
+	encrypted, err := keyvault.KeyVault().Encrypt(context.TODO(), s.NIK, keyName, "")
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (s *Student) EncryptNIK() (err error) {
 }
 
 func (s *Student) EncryptPhone() (err error) {
-	encrypted, err := keyvault.KeyVault().Encrypt(context.TODO(), s.Phone, keyName, s.KeyVersion)
+	encrypted, err := keyvault.KeyVault().Encrypt(context.TODO(), s.Phone, keyName, "")
 	if err != nil {
 		return err
 	}

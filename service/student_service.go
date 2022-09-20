@@ -25,12 +25,12 @@ func (s *StudentService) FindAll(ctx context.Context) (students []entity.Student
 	}
 
 	// Decrypt NIK and phone one by one. If fails, fill with error code.
-	for i, std := range students {
+	for i := range students {
 		// decrypt NIK and phone
-		if err = std.DecryptNIK(); err != nil {
+		if err = students[i].DecryptNIK(); err != nil {
 			students[i].NIK = "error: " + err.Error()
 		}
-		if err = std.DecryptPhone(); err != nil {
+		if err = students[i].DecryptPhone(); err != nil {
 			students[i].Phone = "error: " + err.Error()
 		}
 	}
