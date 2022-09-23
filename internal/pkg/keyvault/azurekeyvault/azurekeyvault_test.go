@@ -42,7 +42,7 @@ func TestEncryptDecrypt(t *testing.T) {
 
 func TestDecrypt(t *testing.T) {
 	ctx := context.TODO()
-	encrypted := "BXxsSXh+VomQhBrSPyGI46cK2Y9lF+NQz5uD2uW8x8vSsTrGaroNZV+TJC9dhERVpX7r51oTsbRj/7hRrhrWf7mQ4gSOaSBM7IjkSibC+UHR9RWvt9NVIRuoueTrkjlpGn1E5wlzji7q+vji+KVa1JdUBt+dxqd1Fnw6xXgQFmrwyHbr1zkhBHnBGKA4DNhJ2ujnIo1h4EomXkA1EY5z7hqvF8EpQhuuAMTVRKtNhycSKk3K+0pqaH4h71bWqTVJ8vgSHnx+N9g2GJjtLwjrekVLnMFIJWjU6ZONuExMS26LsnR52TgtKDk9FDEnr4IZUka4WiJin2/8KrzcgQcgdQ=="
+	encrypted := "dA8wWf6BiK4BYs/xgOP0iVTWIgeomUUubBbn/ihk4LYsAMa/z6LqFmdhiBz04i3ky3jyIpUbQK1tBGskfApCFJ+4nzwAQN1EzYKWe0QRT+ixm5KqHB1G79UROJtSiTjurxY4Epkyp665QcNSOatj+QCXEV4eSO85do6YM2JJR3L4pU5PnJ/3MzbBeKFwEnau90icQ3CSsYHuH3Ff65bgzNdoWbW5aV+F771JwR74H/TE3YsI5XzFvvDXlg8c1TKCpOj5wamTPP0PU2DPgM/MyhVTaMqyNnbGEqxEk3zTnt/ZRfWGSmwQxAPOP7ssK7BII+0JUMAMQv35Lgw0SpikhQ=="
 	keyName := "demo"
 
 	decrypted, err := az.Decrypt(ctx, encrypted, keyName, "")
@@ -62,7 +62,7 @@ func BenchmarkEncrypt(b *testing.B) {
 func BenchmarkDecrypt(b *testing.B) {
 	ctx := context.TODO()
 	keyName := "demo"
-	encrypted := "fCmsij5S0GzpfXYQ2e3HSwQuTKS0RHQ/lRWcrOiyPSAVPKyPdQ3qlGSfVaX/0/bRAo63bxkckWYUH59uv3G1Y/kNUfMi7H1SL3q9hDe/PW+DYP0S8nI7phHJKVVMKNfO+pvm18k4Y3KEJRDw9cG3YJGFy5U+MSPYMUp127KMEYhI5XKmf/YI0I/qijiC8Xm8lWMq3EMLYxyqH8fBMneshHzT7JcN4nRD/22um9x9w5uEsXcbWQhikn5KSXpXEM8qKyrxvL9ZQ1YPxrIPJ7jLyw/6S74K6v5axefbmu+mtvqksu2zspoUSx3gAopPpjDuT/rTE0M7dilMNSW2Vq5JMg=="
+	encrypted := "dA8wWf6BiK4BYs/xgOP0iVTWIgeomUUubBbn/ihk4LYsAMa/z6LqFmdhiBz04i3ky3jyIpUbQK1tBGskfApCFJ+4nzwAQN1EzYKWe0QRT+ixm5KqHB1G79UROJtSiTjurxY4Epkyp665QcNSOatj+QCXEV4eSO85do6YM2JJR3L4pU5PnJ/3MzbBeKFwEnau90icQ3CSsYHuH3Ff65bgzNdoWbW5aV+F771JwR74H/TE3YsI5XzFvvDXlg8c1TKCpOj5wamTPP0PU2DPgM/MyhVTaMqyNnbGEqxEk3zTnt/ZRfWGSmwQxAPOP7ssK7BII+0JUMAMQv35Lgw0SpikhQ=="
 	for i := 0; i < b.N; i++ {
 		az.Decrypt(ctx, encrypted, keyName, "")
 	}

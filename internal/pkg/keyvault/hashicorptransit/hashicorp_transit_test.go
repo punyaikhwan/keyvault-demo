@@ -52,7 +52,7 @@ func BenchmarkEncrypt(b *testing.B) {
 func BenchmarkDecrypt(b *testing.B) {
 	ctx := context.TODO()
 	keyName := "demo"
-	encrypted := "vault:v1:j0cIunUd3fRcWlJAx6i2zqV5CPue1iSVeSIQiuDHzukJf7kCoyaYW7X7rCJKE5vaR5bH8nLPw8gi5mWKIhueJNX6GeWBHRIPaDXNz2shaLxFKuN1QlLe6GuRR58wjlIikhRbQfzmG9Je/59pQD63iiFU1fvzk/QfAhkNcl5CvImntbvRaodQKzbM3AOwJ9VOhPitK1dG9HgKDfmdlsxxLQhDjoiO9iEWZHVrz5bxPLbt+7eeRMLrU84sf4NPkICb4Y69IkBuurGqTOi4XMcRwsoqT2asqjtdbCnWSnN68i1AuYSkB4mp1jnnJ2TTs48w70lLJ+bnKqDEu6sIjxhO9A=="
+	encrypted := "vault:v4:EejDgr9PGOGk/aLBzxdnOFvOwGnkolfS4CTsqau11V22xYeNpbN3AqdWXUbLBu8Hp+UAEL2imETwBVILgnBGFhjYUXjgPbq4OoR0T/i/12FgZYo5BeDk7eZbW40w68uCsAcnEgB3CA4fBRdEdooLCAsRS34SgWnhmLuP/iObchTulAh9HYZfJ1pW34dULiCKd/Kb0gqwG9tBly6RYHp45Rxi0aFF+Dz5TKcUnK0m9CAqRIYPAc0Zl0PgrAPQ0IyEtkU5BoUBmANnIAY1rdI4zraDVb6+u7K2IWJAY4mPEmn6oy4wS15x+7WN254OFg9wbnjpuf9yjOHITodDDsSnug=="
 	for i := 0; i < b.N; i++ {
 		hte.Decrypt(ctx, encrypted, keyName, "")
 	}
