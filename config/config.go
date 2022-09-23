@@ -16,12 +16,14 @@ var (
 )
 
 type _Configuration struct {
-	VaultProvider string `env:"VAULT_PROVIDER" env-default:"hashicorp"` // azure/hashicorp
-	VaultURL      string `env:"VAULT_URL" env-required`
-	VaultUsername string `env:"VAULT_USERNAME"` // only for hashicorp provider
-	VaultPassword string `env:"VAULT_PASSWORD"` // only for hashicorp provider
-	DBURI         string `env:"DB_URI" env-required`
-	Port          int    `env:"FP_PORT" env-default:"7003"`
+	VaultProvider  string `env:"VAULT_PROVIDER" env-default:"hashicorp"` // azure/hashicorp/aws
+	VaultURL       string `env:"VAULT_URL"`
+	VaultUsername  string `env:"VAULT_USERNAME"`    // only for hashicorp provider
+	VaultPassword  string `env:"VAULT_PASSWORD"`    // only for hashicorp provider
+	AWSAccessKeyID string `env:"AWS_ACCESS_KEY_ID"` // only for aws provider
+	AWSSecretKey   string `env:"AWS_SECRET_KEY"`    // only for aws provider
+	DBURI          string `env:"DB_URI" env-required`
+	Port           int    `env:"FP_PORT" env-default:"7003"`
 }
 
 // ReadConfig reads the configuration file and sets the envFile variable
