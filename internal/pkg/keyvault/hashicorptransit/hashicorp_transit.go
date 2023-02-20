@@ -8,13 +8,14 @@ import (
 	"keyvault-demo/internal/pkg/keyvault"
 )
 
-var algo = hashicorp.JSONWebKeyEncryptionAlgorithmRSAOAEP256
+var algo = hashicorp.HashicorpAES256GCM96
 
 type hashicorpTransitEngine struct {
-	vaultURL string
-	username string
-	password string
-	client   *hashicorp.Client
+	vaultURL    string
+	username    string
+	password    string
+	transitPath string
+	client      *hashicorp.Client
 }
 
 func (hte *hashicorpTransitEngine) getClient() *hashicorp.Client {
@@ -22,14 +23,14 @@ func (hte *hashicorpTransitEngine) getClient() *hashicorp.Client {
 		fmt.Println("Creating Hashicorp client...")
 		cred := hashicorp.NewUsernamePasswordCredential(hte.username, hte.password)
 
-		hte.client = hashicorp.NewClient(hte.vaultURL, cred)
+		hte.client = hashicorp.NewClient(hte.vaultURL, hte.transitPath, cred)
 	}
 
 	return hte.client
 }
 
-func NewHashicorpTransitEngine(vaultURL string, username string, password string) keyvault.KeyVault {
-	return &hashicorpTransitEngine{vaultURL, username, password, nil}
+func NewHashicorpTransitEngine(vaultURL string, username string, password string, transitPath string) keyvault.KeyVault {
+	return &hashicorpTransitEngine{vaultURL, username, password, transitPath, nil}
 }
 
 func (hte *hashicorpTransitEngine) Encrypt(ctx context.Context, plaintext string, keyName string, keyVersion string) (result keyvault.EncryptionResult, err error) {

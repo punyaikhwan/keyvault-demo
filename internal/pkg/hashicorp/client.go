@@ -14,13 +14,15 @@ import (
 )
 
 type Client struct {
-	VaultURL string
-	Token    AccessToken
+	VaultURL    string
+	Token       AccessToken
+	TransitPath string
 }
 
-func NewClient(vaultURL string, cred TokenCredential) *Client {
+func NewClient(vaultURL string, transitPath string, cred TokenCredential) *Client {
 	client := &Client{
-		VaultURL: vaultURL,
+		VaultURL:    vaultURL,
+		TransitPath: transitPath,
 	}
 
 	cred.SetClient(client)
@@ -54,7 +56,7 @@ func (k KeyVersions) Last() (version string, createdAt time.Time) {
 }
 
 func (c *Client) GetKey(ctx context.Context, name string) (key Key, err error) {
-	url := fmt.Sprintf("%s/transit/keys/%s", c.VaultURL, name)
+	url := fmt.Sprintf("%s/%s/keys/%s", c.VaultURL, c.TransitPath, name)
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -78,32 +80,28 @@ func (c *Client) GetKey(ctx context.Context, name string) (key Key, err error) {
 	return key, err
 }
 
-// JSONWebKeyEncryptionAlgorithm - algorithm identifier
-type JSONWebKeyEncryptionAlgorithm string
+// HashicorpKeyType - algorithm identifier
+type HashicorpKeyType string
 
 const (
-	JSONWebKeyEncryptionAlgorithmA128CBC    JSONWebKeyEncryptionAlgorithm = "A128CBC"
-	JSONWebKeyEncryptionAlgorithmA128CBCPAD JSONWebKeyEncryptionAlgorithm = "A128CBCPAD"
-	JSONWebKeyEncryptionAlgorithmA128GCM    JSONWebKeyEncryptionAlgorithm = "A128GCM"
-	JSONWebKeyEncryptionAlgorithmA128KW     JSONWebKeyEncryptionAlgorithm = "A128KW"
-	JSONWebKeyEncryptionAlgorithmA192CBC    JSONWebKeyEncryptionAlgorithm = "A192CBC"
-	JSONWebKeyEncryptionAlgorithmA192CBCPAD JSONWebKeyEncryptionAlgorithm = "A192CBCPAD"
-	JSONWebKeyEncryptionAlgorithmA192GCM    JSONWebKeyEncryptionAlgorithm = "A192GCM"
-	JSONWebKeyEncryptionAlgorithmA192KW     JSONWebKeyEncryptionAlgorithm = "A192KW"
-	JSONWebKeyEncryptionAlgorithmA256CBC    JSONWebKeyEncryptionAlgorithm = "A256CBC"
-	JSONWebKeyEncryptionAlgorithmA256CBCPAD JSONWebKeyEncryptionAlgorithm = "A256CBCPAD"
-	JSONWebKeyEncryptionAlgorithmA256GCM    JSONWebKeyEncryptionAlgorithm = "A256GCM"
-	JSONWebKeyEncryptionAlgorithmA256KW     JSONWebKeyEncryptionAlgorithm = "A256KW"
-	JSONWebKeyEncryptionAlgorithmRSA15      JSONWebKeyEncryptionAlgorithm = "RSA1_5"
-	JSONWebKeyEncryptionAlgorithmRSAOAEP    JSONWebKeyEncryptionAlgorithm = "RSA-OAEP"
-	JSONWebKeyEncryptionAlgorithmRSAOAEP256 JSONWebKeyEncryptionAlgorithm = "RSA-OAEP-256"
+	HashicorpAES128GCM96     HashicorpKeyType = "aes128-gcm96"
+	HashicorpAES256GCM96     HashicorpKeyType = "aes256-gcm96"
+	HashicorpCACHA20POLY1305 HashicorpKeyType = "chacha20-poly1305"
+	HashicorpED25519         HashicorpKeyType = "ed25519"
+	HashicorpECDSAP256       HashicorpKeyType = "ecdsa-p256"
+	HashicorpECDSAP384       HashicorpKeyType = "ecdsa-p384"
+	HashicorpECDSAP521       HashicorpKeyType = "ecdsa-p521"
+	HashicorpRSA2048         HashicorpKeyType = "rsa-2048"
+	HashicorpRSA3072         HashicorpKeyType = "rsa-3072"
+	HashicorpRSA4096         HashicorpKeyType = "rsa-4096"
+	HashicorpHMAC            HashicorpKeyType = "hmac"
 )
 
 type KeyOperationsParameters struct {
-	Algorithm   *JSONWebKeyEncryptionAlgorithm `json:"type,omitempty"`
-	Nonce       string                         `json:"nonce"`
-	Value       []byte                         `json:"-"`
-	Base64Value string                         `json:"plaintext"`
+	Algorithm   *HashicorpKeyType `json:"type,omitempty"`
+	Nonce       string            `json:"nonce"`
+	Value       []byte            `json:"-"`
+	Base64Value string            `json:"plaintext"`
 }
 
 // EncryptResponse contains the response from method Client.Encrypt.
@@ -139,7 +137,7 @@ type decryptResult struct {
 }
 
 func (c *Client) Encrypt(ctx context.Context, name string, version string, params KeyOperationsParameters) (EncryptResponse, error) {
-	url := fmt.Sprintf("%s/transit/encrypt/%s", c.VaultURL, name)
+	url := fmt.Sprintf("%s/%s/encrypt/%s", c.VaultURL, c.TransitPath, name)
 	value := params.Base64Value
 	if value == "" {
 		value = base64.StdEncoding.EncodeToString(params.Value)
@@ -184,7 +182,7 @@ func (c *Client) Encrypt(ctx context.Context, name string, version string, param
 }
 
 func (c *Client) Decrypt(ctx context.Context, name string, params KeyOperationsParameters) (DecryptResponse, error) {
-	url := fmt.Sprintf("%s/transit/decrypt/%s", c.VaultURL, name)
+	url := fmt.Sprintf("%s/%s/decrypt/%s", c.VaultURL, c.TransitPath, name)
 	value := params.Base64Value
 	if value == "" {
 		value = base64.StdEncoding.EncodeToString(params.Value)

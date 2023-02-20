@@ -13,7 +13,7 @@ import (
 var (
 	ctxTest     = context.TODO()
 	keyNameTest = "demo"
-	algoTest    = JSONWebKeyEncryptionAlgorithmRSAOAEP256
+	algoTest    = HashicorpAES256GCM96
 	plainText   = "password"
 )
 
@@ -36,7 +36,7 @@ func TestLogin(t *testing.T) {
 
 func TestEncrypt(t *testing.T) {
 	cred := NewUsernamePasswordCredential(config.Configuration().VaultUsername, config.Configuration().VaultPassword)
-	client := NewClient(config.Configuration().VaultURL, cred)
+	client := NewClient(config.Configuration().VaultURL, config.Configuration().HashicorpTransitPath, cred)
 
 	encResult, err := client.Encrypt(ctxTest, keyNameTest, "", KeyOperationsParameters{
 		Algorithm: &algoTest,
@@ -50,7 +50,7 @@ func TestEncrypt(t *testing.T) {
 
 func TestEncryptDecrypt(t *testing.T) {
 	cred := NewUsernamePasswordCredential(config.Configuration().VaultUsername, config.Configuration().VaultPassword)
-	client := NewClient(config.Configuration().VaultURL, cred)
+	client := NewClient(config.Configuration().VaultURL, config.Configuration().HashicorpTransitPath, cred)
 
 	encResult, err := client.Encrypt(ctxTest, keyNameTest, "", KeyOperationsParameters{
 		Algorithm: &algoTest,

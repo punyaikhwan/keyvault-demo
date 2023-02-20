@@ -11,7 +11,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys"
 )
 
-var algo = azkeys.JSONWebKeyEncryptionAlgorithmRSAOAEP256
+var algo = azkeys.JSONWebKeyEncryptionAlgorithmA256GCM
 
 type azureKeyVault struct {
 	vaultURL string

@@ -25,7 +25,7 @@ func KeyVault() keyvault.KeyVault {
 			kv := azurekeyvault.NewAzureKeyVault(config.Configuration().VaultURL)
 			instance = &keyVault{kv}
 		default:
-			kv := hashicorptransit.NewHashicorpTransitEngine(config.Configuration().VaultURL, config.Configuration().VaultUsername, config.Configuration().VaultPassword)
+			kv := hashicorptransit.NewHashicorpTransitEngine(config.Configuration().VaultURL, config.Configuration().VaultUsername, config.Configuration().VaultPassword, config.Configuration().HashicorpTransitPath)
 			instance = &keyVault{kv}
 		}
 	}

@@ -15,14 +15,14 @@ var hte keyvault.KeyVault
 
 func TestMain(m *testing.M) {
 	config.ReadConfig("../../../../.env")
-	hte = NewHashicorpTransitEngine(config.Configuration().VaultURL, config.Configuration().VaultUsername, config.Configuration().VaultPassword)
+	hte = NewHashicorpTransitEngine(config.Configuration().VaultURL, config.Configuration().VaultUsername, config.Configuration().VaultPassword, config.Configuration().HashicorpTransitPath)
 	m.Run()
 }
 
 func TestEncryptDecrypt(t *testing.T) {
 	ctx := context.TODO()
 	text := "hello-key-vault"
-	keyName := "demo"
+	keyName := "9999-demo"
 
 	start := time.Now()
 	encrypted, err := hte.Encrypt(ctx, text, keyName, "")
@@ -43,7 +43,7 @@ func TestEncryptDecrypt(t *testing.T) {
 func BenchmarkEncrypt(b *testing.B) {
 	ctx := context.TODO()
 	text := "hello-key-vault"
-	keyName := "demo"
+	keyName := "9999-demo"
 	for i := 0; i < b.N; i++ {
 		hte.Encrypt(ctx, text, keyName, "")
 	}
